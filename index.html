@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Joke Generator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="heading">Random Joke Generator</div>
+  <div class="joke-container">
+    <div class="joke-box">
+      <div class="joke-text" id="joke"></div>
+      <p id="char-count"></p>
+    </div>
+    <div class="button-container">
+      <button id="get-joke">Get Joke</button>
+      <button id="clear-joke">Clear Joke</button>
+    </div>
+  </div>
+
+  <script>
+    const jokeElement = document.getElementById('joke');
+    const charCountElement = document.getElementById('char-count');
+    const getJokeButton = document.getElementById('get-joke');
+    const clearJokeButton = document.getElementById('clear-joke');
+
+    async function getJoke() {
+      try {
+        const response = await fetch('https://v2.jokeapi.dev/joke/Any');
+        const data = await response.json();
+        jokeElement.textContent = data.setup ? `${data.setup} - ${data.delivery}` : data.joke;
+        charCountElement.textContent = `Character Count: ${jokeElement.textContent.length}`;
+      } catch (error) {
+        console.error('Error fetching joke:', error);
+        jokeElement.textContent = 'Failed to fetch joke. Please try again later.';
+        charCountElement.textContent = '';
+      }
+    }
+
+    function clearJoke() {
+      jokeElement.textContent = '';
+      charCountElement.textContent = '';
+    }
+
+    getJokeButton.addEventListener('click', getJoke);
+    clearJokeButton.addEventListener('click', clearJoke);
+
+    // Initial joke fetch on page load
+    getJoke();
+  </script>
+</body>
+</html>
